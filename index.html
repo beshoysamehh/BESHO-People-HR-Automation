@@ -3,75 +3,128 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BESHO People — Live AI Automation System</title>
+  <title>BESHO People — AI Recruitment & Policy Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f172a;
-      --surface: #1e293b;
-      --surface-hover: #273549;
-      --border: #334155;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --online-bg: rgba(16, 185, 129, 0.15);
-      --online-text: #34d399;
-      --offline-bg: rgba(239, 68, 68, 0.15);
+      --bg: #050706;
+      --surface: #0b0f0d;
+      --surface-2: #111714;
+      --surface-hover: #161f1a;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-green: rgba(74, 222, 128, 0.25);
+      --text: #f3f7f4;
+      --muted: #8b9a91;
+      --green: #22c55e;
+      --green-light: #4ade80;
+      --green-glow: rgba(34, 197, 94, 0.22);
+      --online-bg: rgba(34, 197, 94, 0.12);
+      --online-text: #4ade80;
+      --offline-bg: rgba(239, 68, 68, 0.12);
       --offline-text: #f87171;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: var(--bg);
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(34, 197, 94, 0.16), transparent),
+        linear-gradient(rgba(74, 222, 128, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74, 222, 128, 0.025) 1px, transparent 1px);
+      background-size: 100% 100%, 44px 44px, 44px 44px;
       color: var(--text);
       line-height: 1.6;
-      padding: 32px 16px 64px;
+      min-height: 100vh;
     }
 
     .container {
-      max-width: 880px;
+      max-width: 960px;
       margin: 0 auto;
+      padding: 0 20px 80px;
     }
 
-    header.hero {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
-      margin-bottom: 24px;
-    }
-
-    .hero-top {
+    /* Top Navbar */
+    nav.topbar {
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+      gap: 16px;
+      flex-wrap: wrap;
     }
 
-    h1 {
-      font-size: 1.85rem;
-      font-weight: 700;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.15rem;
       letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
     }
 
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--green-light), var(--green));
+      display: grid;
+      place-items: center;
+      color: #031208;
+      font-weight: 800;
+      font-size: 0.95rem;
+      box-shadow: 0 0 20px var(--green-glow);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--green-light);
+    }
+
+    /* Status Badge */
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       padding: 6px 14px;
       border-radius: 999px;
-      font-size: 0.875rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
       font-weight: 600;
-      background: #334155;
-      color: var(--text);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--muted);
     }
 
-    .badge::before {
-      content: "";
+    .badge .dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
@@ -81,113 +134,313 @@
     .badge.on {
       background: var(--online-bg);
       color: var(--online-text);
-      border: 1px solid rgba(52, 211, 153, 0.3);
+      border-color: rgba(74, 222, 128, 0.35);
+      box-shadow: 0 0 18px rgba(34, 197, 94, 0.15);
+    }
+
+    .badge.on .dot {
+      animation: pulse 1.8s infinite;
     }
 
     .badge.off {
       background: var(--offline-bg);
       color: var(--offline-text);
-      border: 1px solid rgba(248, 113, 113, 0.3);
+      border-color: rgba(248, 113, 113, 0.3);
     }
 
-    .subtitle {
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+      70% { box-shadow: 0 0 0 7px rgba(74, 222, 128, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+    }
+
+    /* 1. Hero Section */
+    header.hero {
+      text-align: center;
+      max-width: 740px;
+      margin: 0 auto 56px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid var(--border-green);
+      color: var(--green-light);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.35rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.035em;
+      margin-bottom: 18px;
+    }
+
+    h1 span {
+      background: linear-gradient(90deg, #ffffff 15%, var(--green-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
       color: var(--muted);
-      font-size: 1.05rem;
-    }
-
-    h2 {
-      font-size: 1.35rem;
-      margin-bottom: 16px;
-      color: var(--text);
-    }
-
-    section {
-      margin-bottom: 32px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 22px;
-      text-decoration: none;
-      color: inherit;
-      transition: transform 0.15s ease, border-color 0.15s ease;
-      display: block;
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-      border-color: var(--primary);
-    }
-
-    .card h3 {
       font-size: 1.1rem;
-      margin-bottom: 6px;
-      color: #60a5fa;
+      max-width: 620px;
+      margin: 0 auto 28px;
     }
 
-    .card p {
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.18s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green-light), var(--green));
+      color: #031308;
+      box-shadow: 0 4px 24px rgba(34, 197, 94, 0.28);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 30px rgba(74, 222, 128, 0.42);
+    }
+
+    .btn-ghost {
+      background: var(--surface-2);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--border-green);
+      background: var(--surface-hover);
+      color: var(--green-light);
+    }
+
+    a.disabled {
+      pointer-events: none;
+      opacity: 0.4;
+      box-shadow: none;
+    }
+
+    /* Section Headings */
+    section {
+      margin-bottom: 56px;
+    }
+
+    .section-head {
+      margin-bottom: 20px;
+    }
+
+    .section-head h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .section-head p {
       color: var(--muted);
       font-size: 0.95rem;
+    }
+
+    /* 2. Choose What You Want */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 18px;
+    }
+
+    .action-card {
+      background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 26px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .action-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--border-green);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 24px rgba(34, 197, 94, 0.08);
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid var(--border-green);
+      color: var(--green-light);
+      display: grid;
+      place-items: center;
+    }
+
+    .action-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .action-card h3 span {
+      color: var(--green-light);
+      font-size: 1.1rem;
+      transition: transform 0.2s ease;
+    }
+
+    .action-card:hover h3 span {
+      transform: translateX(4px);
+    }
+
+    .action-card p {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    /* 3. Try It Live */
+    .live-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
     }
 
     .panel {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 20px;
+      border-radius: 18px;
+      padding: 26px;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .panel-header h3 {
+      font-size: 1.18rem;
+      font-weight: 700;
+    }
+
+    .panel-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      color: var(--green-light);
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid var(--border-green);
+      padding: 4px 10px;
+      border-radius: 6px;
     }
 
     .panel-desc {
       color: var(--muted);
-      font-size: 0.95rem;
-      margin-bottom: 16px;
+      font-size: 0.94rem;
+      margin-bottom: 18px;
+    }
+
+    /* Quick Prompts */
+    .prompts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .prompt-chip {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.82rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .prompt-chip:hover {
+      border-color: var(--border-green);
+      color: var(--green-light);
+      background: var(--surface-hover);
     }
 
     #msgs {
-      background: var(--bg);
+      background: #040605;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      min-height: 220px;
-      max-height: 380px;
+      border-radius: 14px;
+      padding: 18px;
+      min-height: 240px;
+      max-height: 400px;
       overflow-y: auto;
       margin-bottom: 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .msg {
-      padding: 10px 14px;
+      padding: 11px 15px;
       border-radius: 12px;
       max-width: 82%;
-      font-size: 0.95rem;
+      font-size: 0.94rem;
       white-space: pre-wrap;
       word-wrap: break-word;
     }
 
     .me {
       align-self: flex-end;
-      background: var(--primary);
-      color: #fff;
-      border-bottom-right-radius: 4px;
+      background: linear-gradient(135deg, var(--green-light), var(--green));
+      color: #031308;
+      font-weight: 600;
+      border-bottom-right-radius: 3px;
     }
 
     .bot {
       align-self: flex-start;
-      background: var(--surface);
+      background: var(--surface-2);
       border: 1px solid var(--border);
       color: var(--text);
-      border-bottom-left-radius: 4px;
+      border-bottom-left-radius: 3px;
     }
 
     form#ask {
@@ -197,42 +450,49 @@
 
     input#q {
       flex: 1;
-      background: var(--bg);
+      background: #040605;
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 12px 14px;
+      padding: 13px 16px;
       color: var(--text);
+      font-family: inherit;
       font-size: 0.95rem;
       outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     input#q:focus {
-      border-color: var(--primary);
+      border-color: var(--green-light);
+      box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.12);
     }
 
-    button, .btn {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 12px 20px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      transition: background 0.15s ease;
+    .apply-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 18px;
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.07), rgba(11, 15, 13, 0.9));
+      border: 1px solid var(--border-green);
+      border-radius: 18px;
+      padding: 26px;
     }
 
-    button:hover, .btn:hover {
-      background: var(--primary-hover);
+    .apply-info {
+      max-width: 560px;
     }
 
-    a.disabled {
-      pointer-events: none;
-      opacity: 0.45;
+    .apply-info h3 {
+      font-size: 1.18rem;
+      margin-bottom: 6px;
     }
 
+    .apply-info p {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    /* 4. How It Works */
     .steps {
       list-style: none;
       counter-reset: wf-counter;
@@ -245,161 +505,277 @@
       counter-increment: wf-counter;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px 18px 16px 54px;
+      border-radius: 14px;
+      padding: 18px 20px 18px 62px;
       position: relative;
+      transition: border-color 0.15s ease;
+    }
+
+    .steps li:hover {
+      border-color: var(--border-green);
     }
 
     .steps li::before {
-      content: counter(wf-counter);
+      content: "0" counter(wf-counter);
       position: absolute;
-      left: 16px;
-      top: 16px;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: rgba(59, 130, 246, 0.2);
-      color: #60a5fa;
+      left: 18px;
+      top: 19px;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid var(--border-green);
+      color: var(--green-light);
+      font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 0.8rem;
+      display: grid;
+      place-items: center;
     }
 
-    .steps strong {
-      display: block;
-      margin-bottom: 2px;
+    .step-top {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .step-top strong {
+      font-size: 1.02rem;
       color: var(--text);
     }
 
-    .steps span {
-      color: var(--muted);
-      font-size: 0.92rem;
+    .trigger-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--green-light);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 5px;
     }
 
+    .steps span.desc {
+      color: var(--muted);
+      font-size: 0.92rem;
+      display: block;
+    }
+
+    /* 5. Download Workflows */
     .downloads {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
     }
 
     .dl-link {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 16px;
-      color: #60a5fa;
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: var(--text);
       text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.83rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      transition: all 0.15s ease;
+    }
+
+    .dl-link span.arrow {
+      color: var(--green-light);
+      font-weight: 700;
     }
 
     .dl-link:hover {
-      border-color: var(--primary);
+      border-color: var(--border-green);
       background: var(--surface-hover);
+      color: var(--green-light);
     }
 
     footer {
-      text-align: center;
+      border-top: 1px solid var(--border);
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
       color: var(--muted);
-      font-size: 0.85rem;
-      margin-top: 40px;
+      font-size: 0.86rem;
+    }
+
+    footer strong {
+      color: var(--green-light);
+    }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      form#ask { flex-direction: column; }
+      .msg { max-width: 92%; }
     }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- Top Bar -->
+    <nav class="topbar">
+      <a class="brand" href="#">
+        <div class="brand-mark">B</div>
+        <span>BESHO People</span>
+      </a>
+      <div class="nav-links">
+        <a href="#chat-section">Live Demo</a>
+        <a href="#architecture">Workflows</a>
+        <a href="#downloads">Download JSON</a>
+      </div>
+      <span class="badge" id="status"><span class="dot"></span><span id="statusText">Checking...</span></span>
+    </nav>
+
     <!-- 1. Hero -->
     <header class="hero">
-      <div class="hero-top">
-        <h1>BESHO People</h1>
-        <span class="badge" id="status">Checking...</span>
-      </div>
-      <p class="subtitle">
-        Live n8n AI automation suite that screens job applications and answers company policy questions directly from verified documents.
+      <div class="eyebrow">Live n8n AI Automation Engine</div>
+      <h1><span>BESHO People</span><br>Autonomous HR & RAG Ops</h1>
+      <p class="hero-sub">
+        Real-time n8n automation platform that screens candidate PDF resumes with AI and answers employee policy questions directly from verified company documents.
       </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#chat-section">Try AI Assistant</a>
+        <a class="btn btn-ghost" href="#apply-section">Submit Application</a>
+      </div>
     </header>
 
-    <!-- 2. Choose what you want -->
+    <!-- 2. Choose What You Want -->
     <section>
-      <h2>Choose What You Want</h2>
-      <div class="cards">
-        <a class="card" href="#chat-section">
-          <h3>Ask AI Assistant</h3>
-          <p>Chat with the RAG assistant to get instant, source-cited answers from our knowledge base.</p>
+      <div class="section-head">
+        <h2>Choose What You Want</h2>
+        <p>Every interaction runs live against self-hosted n8n workflows—no mock data.</p>
+      </div>
+      <div class="bento-grid">
+        <a class="action-card" href="#chat-section">
+          <div class="card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          </div>
+          <h3>Ask AI Assistant <span>&rarr;</span></h3>
+          <p>Query the RAG knowledge base in English or Arabic and get grounded answers with source citations.</p>
         </a>
-        <a class="card" href="#apply-section">
-          <h3>Apply for a Job</h3>
-          <p>Submit your PDF CV through our automated intake pipeline for AI screening and feedback.</p>
+        <a class="action-card" href="#apply-section">
+          <div class="card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          </div>
+          <h3>Apply for a Job <span>&rarr;</span></h3>
+          <p>Upload your PDF resume to trigger automated validation, Google Drive archiving, and AI candidate scoring.</p>
         </a>
       </div>
     </section>
 
-    <!-- 3. Try it -->
+    <!-- 3. Try It Live -->
     <section id="chat-section">
-      <h2>Try It Live</h2>
-      <div class="panel">
-        <h3>AI Knowledge Assistant (RAG)</h3>
-        <p class="panel-desc">Every question triggers a real n8n workflow backed by Google Gemini and an In-Memory Vector Store.</p>
-        <div id="msgs"></div>
-        <form id="ask">
-          <input id="q" placeholder="Ask about leave days, working hours, or policies..." required autocomplete="off">
-          <button type="submit">Ask</button>
-        </form>
+      <div class="section-head">
+        <h2>Try It Live</h2>
+        <p>Connected directly to n8n via encrypted ngrok tunnel.</p>
       </div>
 
-      <div class="panel" id="apply-section">
-        <h3>Automated Job Application</h3>
-        <p class="panel-desc">Upload a PDF CV. Our workflow validates your file, archives it to Google Drive, logs your record, and scores it with AI.</p>
-        <a id="applyLink" class="btn" target="_blank" rel="noopener">Open Application Form</a>
+      <div class="live-stack">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>AI Policy & Knowledge Assistant (RAG)</h3>
+            </div>
+            <span class="panel-tag">Gemini Embeddings + Vector Store</span>
+          </div>
+          <p class="panel-desc">Ask a question below or click a sample prompt to test live retrieval from Google Drive policy docs.</p>
+
+          <div class="prompts">
+            <button type="button" class="prompt-chip" data-q="How many annual leave days do I get?">Annual leave days?</button>
+            <button type="button" class="prompt-chip" data-q="What are the standard working hours?">Working hours?</button>
+            <button type="button" class="prompt-chip" data-q="Is remote work allowed?">Remote work policy?</button>
+            <button type="button" class="prompt-chip" data-q="كم يوم إجازة سنوية للموظفين؟">اسأل بالعربي</button>
+          </div>
+
+          <div id="msgs"></div>
+
+          <form id="ask">
+            <input id="q" placeholder="Ask about leave days, working hours, or company policies..." required autocomplete="off">
+            <button type="submit" class="btn btn-primary">Ask AI</button>
+          </form>
+        </div>
+
+        <div class="apply-box" id="apply-section">
+          <div class="apply-info">
+            <h3>Automated Candidate Intake</h3>
+            <p>Submit a real PDF CV. The workflow checks file integrity, prevents duplicate applications, stores your CV in Drive, logs your entry to Sheets, and scores your profile with AI.</p>
+          </div>
+          <a id="applyLink" class="btn btn-primary" target="_blank" rel="noopener">Open Application Form &rarr;</a>
+        </div>
       </div>
     </section>
 
-    <!-- 4. How it works -->
-    <section>
-      <h2>How It Works</h2>
+    <!-- 4. How It Works -->
+    <section id="architecture">
+      <div class="section-head">
+        <h2>How It Works</h2>
+        <p>Five modular n8n workflows orchestrating intake, AI evaluation, RAG sync, and fault monitoring.</p>
+      </div>
       <ol class="steps">
         <li>
-          <strong>Recruitment 1 — Intake (Form Trigger)</strong>
-          <span>Validates applicant details and real PDF format, saves the CV to Google Drive, and logs the candidate to Google Sheets.</span>
+          <div class="step-top">
+            <strong>Recruitment 1 — Candidate Intake</strong>
+            <span class="trigger-pill">Form Trigger</span>
+          </div>
+          <span class="desc">Validates candidate fields and authentic PDF headers, prevents duplicate entries, uploads resumes to Google Drive, and logs applicants to Google Sheets.</span>
         </li>
         <li>
-          <strong>Recruitment 2 — AI Screening (Schedule Trigger)</strong>
-          <span>Reads new applications, evaluates each CV against job criteria using AI, and sends interview invites or decline emails.</span>
+          <div class="step-top">
+            <strong>Recruitment 2 — AI Screening</strong>
+            <span class="trigger-pill">Schedule Trigger</span>
+          </div>
+          <span class="desc">Polls pending applications, evaluates each CV against role requirements using AI, updates scores, and sends personalized interview invites or decline emails.</span>
         </li>
         <li>
-          <strong>Recruitment 3 — Error Handler (Error Trigger)</strong>
-          <span>Captures any workflow failure automatically, logs error details to a sheet, and dispatches instant email alerts.</span>
+          <div class="step-top">
+            <strong>Recruitment 3 — Error Handler</strong>
+            <span class="trigger-pill">Error Trigger</span>
+          </div>
+          <span class="desc">Monitors all workflows in real time, logs execution failures to a dedicated Google Sheet, and dispatches instant alert emails.</span>
         </li>
         <li>
-          <strong>RAG AI Assistant (Chat Trigger)</strong>
-          <span>Retrieves relevant policy chunks from the vector store and generates grounded answers with source citations.</span>
+          <div class="step-top">
+            <strong>RAG Knowledge Assistant</strong>
+            <span class="trigger-pill">Chat Trigger</span>
+          </div>
+          <span class="desc">Embeds user queries, searches the in-memory vector store for matching policy chunks, and generates grounded responses with source citations.</span>
         </li>
         <li>
-          <strong>Policy Loader (Startup, Daily 7 AM & Manual Triggers)</strong>
-          <span>Syncs Google Docs from Drive, splits text into overlapping chunks, generates Gemini embeddings, and refreshes the knowledge base.</span>
+          <div class="step-top">
+            <strong>Policy Loader</strong>
+            <span class="trigger-pill">Startup &bull; 7 AM Daily &bull; Manual</span>
+          </div>
+          <span class="desc">Fetches policy docs from Google Drive, converts them to plain text, splits chunks with overlap, generates Gemini embeddings, and refreshes the vector store.</span>
         </li>
       </ol>
     </section>
 
     <!-- 5. Download -->
-    <section>
-      <h2>Download n8n Workflows</h2>
+    <section id="downloads">
+      <div class="section-head">
+        <h2>Download Workflows</h2>
+        <p>Sanitized n8n JSON blueprints ready to import into your own instance.</p>
+      </div>
       <div class="downloads">
-        <a class="dl-link" href="recruitment-1-intake.json" download>recruitment-1-intake.json <span>↓</span></a>
-        <a class="dl-link" href="recruitment-2-ai-screening.json" download>recruitment-2-ai-screening.json <span>↓</span></a>
-        <a class="dl-link" href="recruitment-3-error-handler.json" download>recruitment-3-error-handler.json <span>↓</span></a>
-        <a class="dl-link" href="rag-customer-support-chat.json" download>rag-customer-support-chat.json <span>↓</span></a>
-        <a class="dl-link" href="policy-loader.json" download>policy-loader.json <span>↓</span></a>
+        <a class="dl-link" href="recruitment-1-intake.json" download><span>recruitment-1-intake.json</span><span class="arrow">&darr;</span></a>
+        <a class="dl-link" href="recruitment-2-ai-screening.json" download><span>recruitment-2-ai-screening.json</span><span class="arrow">&darr;</span></a>
+        <a class="dl-link" href="recruitment-3-error-handler.json" download><span>recruitment-3-error-handler.json</span><span class="arrow">&darr;</span></a>
+        <a class="dl-link" href="rag-customer-support-chat.json" download><span>rag-customer-support-chat.json</span><span class="arrow">&darr;</span></a>
+        <a class="dl-link" href="policy-loader.json" download><span>policy-loader.json</span><span class="arrow">&darr;</span></a>
       </div>
     </section>
 
     <footer>
-      Built with n8n, Docker, ngrok, Google Gemini & GitHub Pages
+      <span><strong>BESHO People</strong> &mdash; Live Portfolio Deployment</span>
+      <span>Powered by n8n &bull; Docker &bull; ngrok &bull; Gemini &bull; GitHub Pages</span>
     </footer>
   </div>
 
@@ -420,7 +796,7 @@
     $("#applyLink").href = CONFIG.n8nBase + CONFIG.applyForm;
 
     function setStatus(online) {
-      $("#status").textContent = online ? "Online" : "Offline, please try again later";
+      $("#statusText").textContent = online ? "Online" : "Offline, please try again later";
       $("#status").className = "badge " + (online ? "on" : "off");
       document.querySelectorAll("#applyLink").forEach(a => a.classList.toggle("disabled", !online));
     }
@@ -450,13 +826,11 @@
       return d;
     }
 
-    $("#ask").onsubmit = async e => {
-      e.preventDefault();
-      const q = $("#q").value.trim();
-      if (!q) return;
-      $("#q").value = "";
+    add("bot", "Hi! Ask me anything about company HR policies, leave days, or working hours.");
+
+    async function sendQuestion(q) {
       add("me", q);
-      const bot = add("bot", "...");
+      const bot = add("bot", "Thinking...");
       try {
         const r = await fetch(CONFIG.n8nBase + CONFIG.chat, {
           method: "POST",
@@ -471,7 +845,22 @@
         bot.textContent = "The AI assistant is offline right now. Please try again later.";
         setStatus(false);
       }
+    }
+
+    $("#ask").onsubmit = async e => {
+      e.preventDefault();
+      const q = $("#q").value.trim();
+      if (!q) return;
+      $("#q").value = "";
+      await sendQuestion(q);
     };
+
+    document.querySelectorAll(".prompt-chip").forEach(btn => {
+      btn.onclick = () => {
+        const q = btn.getAttribute("data-q");
+        if (q) sendQuestion(q);
+      };
+    });
   </script>
 </body>
 </html>
