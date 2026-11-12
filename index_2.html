@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BESHO People — Live AI Automation System</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #273549;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --online-bg: rgba(16, 185, 129, 0.15);
+      --online-text: #34d399;
+      --offline-bg: rgba(239, 68, 68, 0.15);
+      --offline-text: #f87171;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 32px 16px 64px;
+    }
+
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    header.hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      background: #334155;
+      color: var(--text);
+    }
+
+    .badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .badge.on {
+      background: var(--online-bg);
+      color: var(--online-text);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .badge.off {
+      background: var(--offline-bg);
+      color: var(--offline-text);
+      border: 1px solid rgba(248, 113, 113, 0.3);
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    section {
+      margin-bottom: 32px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      display: block;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      color: #60a5fa;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .panel-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    #msgs {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      min-height: 220px;
+      max-height: 380px;
+      overflow-y: auto;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .msg {
+      padding: 10px 14px;
+      border-radius: 12px;
+      max-width: 82%;
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .me {
+      align-self: flex-end;
+      background: var(--primary);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+    }
+
+    form#ask {
+      display: flex;
+      gap: 10px;
+    }
+
+    input#q {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    input#q:focus {
+      border-color: var(--primary);
+    }
+
+    button, .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.15s ease;
+    }
+
+    button:hover, .btn:hover {
+      background: var(--primary-hover);
+    }
+
+    a.disabled {
+      pointer-events: none;
+      opacity: 0.45;
+    }
+
+    .steps {
+      list-style: none;
+      counter-reset: wf-counter;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .steps li {
+      counter-increment: wf-counter;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px 16px 54px;
+      position: relative;
+    }
+
+    .steps li::before {
+      content: counter(wf-counter);
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .steps strong {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--text);
+    }
+
+    .steps span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .downloads {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+    }
+
+    .dl-link {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dl-link:hover {
+      border-color: var(--primary);
+      background: var(--surface-hover);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 1. Hero -->
+    <header class="hero">
+      <div class="hero-top">
+        <h1>BESHO People</h1>
+        <span class="badge" id="status">Checking...</span>
+      </div>
+      <p class="subtitle">
+        Live n8n AI automation suite that screens job applications and answers company policy questions directly from verified documents.
+      </p>
+    </header>
+
+    <!-- 2. Choose what you want -->
+    <section>
+      <h2>Choose What You Want</h2>
+      <div class="cards">
+        <a class="card" href="#chat-section">
+          <h3>Ask AI Assistant</h3>
+          <p>Chat with the RAG assistant to get instant, source-cited answers from our knowledge base.</p>
+        </a>
+        <a class="card" href="#apply-section">
+          <h3>Apply for a Job</h3>
+          <p>Submit your PDF CV through our automated intake pipeline for AI screening and feedback.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- 3. Try it -->
+    <section id="chat-section">
+      <h2>Try It Live</h2>
+      <div class="panel">
+        <h3>AI Knowledge Assistant (RAG)</h3>
+        <p class="panel-desc">Every question triggers a real n8n workflow backed by Google Gemini and an In-Memory Vector Store.</p>
+        <div id="msgs"></div>
+        <form id="ask">
+          <input id="q" placeholder="Ask about leave days, working hours, or policies..." required autocomplete="off">
+          <button type="submit">Ask</button>
+        </form>
+      </div>
+
+      <div class="panel" id="apply-section">
+        <h3>Automated Job Application</h3>
+        <p class="panel-desc">Upload a PDF CV. Our workflow validates your file, archives it to Google Drive, logs your record, and scores it with AI.</p>
+        <a id="applyLink" class="btn" target="_blank" rel="noopener">Open Application Form</a>
+      </div>
+    </section>
+
+    <!-- 4. How it works -->
+    <section>
+      <h2>How It Works</h2>
+      <ol class="steps">
+        <li>
+          <strong>Recruitment 1 — Intake (Form Trigger)</strong>
+          <span>Validates applicant details and real PDF format, saves the CV to Google Drive, and logs the candidate to Google Sheets.</span>
+        </li>
+        <li>
+          <strong>Recruitment 2 — AI Screening (Schedule Trigger)</strong>
+          <span>Reads new applications, evaluates each CV against job criteria using AI, and sends interview invites or decline emails.</span>
+        </li>
+        <li>
+          <strong>Recruitment 3 — Error Handler (Error Trigger)</strong>
+          <span>Captures any workflow failure automatically, logs error details to a sheet, and dispatches instant email alerts.</span>
+        </li>
+        <li>
+          <strong>RAG AI Assistant (Chat Trigger)</strong>
+          <span>Retrieves relevant policy chunks from the vector store and generates grounded answers with source citations.</span>
+        </li>
+        <li>
+          <strong>Policy Loader (Startup, Daily 7 AM & Manual Triggers)</strong>
+          <span>Syncs Google Docs from Drive, splits text into overlapping chunks, generates Gemini embeddings, and refreshes the knowledge base.</span>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 5. Download -->
+    <section>
+      <h2>Download n8n Workflows</h2>
+      <div class="downloads">
+        <a class="dl-link" href="recruitment-1-intake.json" download>recruitment-1-intake.json <span>↓</span></a>
+        <a class="dl-link" href="recruitment-2-ai-screening.json" download>recruitment-2-ai-screening.json <span>↓</span></a>
+        <a class="dl-link" href="recruitment-3-error-handler.json" download>recruitment-3-error-handler.json <span>↓</span></a>
+        <a class="dl-link" href="rag-customer-support-chat.json" download>rag-customer-support-chat.json <span>↓</span></a>
+        <a class="dl-link" href="policy-loader.json" download>policy-loader.json <span>↓</span></a>
+      </div>
+    </section>
+
+    <footer>
+      Built with n8n, Docker, ngrok, Google Gemini & GitHub Pages
+    </footer>
+  </div>
+
+  <script>
+    const CONFIG = {
+      n8nBase: "https://grain-thrash-exact.ngrok-free.dev",
+      chat: "/webhook/7a70b6d1-34c0-466b-a7df-e6b50871d83a/chat",
+      applyForm: "/form/b6808017-cd70-4599-b5ec-4b93a5e02bef"
+    };
+
+    const $ = s => document.querySelector(s);
+    const sessionId = crypto.randomUUID();
+    const HEADERS = {
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "1"
+    };
+
+    $("#applyLink").href = CONFIG.n8nBase + CONFIG.applyForm;
+
+    function setStatus(online) {
+      $("#status").textContent = online ? "Online" : "Offline, please try again later";
+      $("#status").className = "badge " + (online ? "on" : "off");
+      document.querySelectorAll("#applyLink").forEach(a => a.classList.toggle("disabled", !online));
+    }
+
+    async function checkStatus() {
+      try {
+        const res = await fetch(CONFIG.n8nBase + CONFIG.chat, {
+          method: "POST",
+          headers: HEADERS,
+          body: JSON.stringify({ action: "loadPreviousSession", sessionId })
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        setStatus(true);
+      } catch (err) {
+        setStatus(false);
+      }
+    }
+
+    checkStatus();
+
+    function add(cls, text) {
+      const d = document.createElement("div");
+      d.className = "msg " + cls;
+      d.textContent = text;
+      $("#msgs").append(d);
+      $("#msgs").scrollTop = $("#msgs").scrollHeight;
+      return d;
+    }
+
+    $("#ask").onsubmit = async e => {
+      e.preventDefault();
+      const q = $("#q").value.trim();
+      if (!q) return;
+      $("#q").value = "";
+      add("me", q);
+      const bot = add("bot", "...");
+      try {
+        const r = await fetch(CONFIG.n8nBase + CONFIG.chat, {
+          method: "POST",
+          headers: HEADERS,
+          body: JSON.stringify({ action: "sendMessage", sessionId, chatInput: q })
+        });
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        const data = await r.json();
+        bot.textContent = data.output || "No response returned from workflow.";
+        setStatus(true);
+      } catch (err) {
+        bot.textContent = "The AI assistant is offline right now. Please try again later.";
+        setStatus(false);
+      }
+    };
+  </script>
+</body>
+</html>

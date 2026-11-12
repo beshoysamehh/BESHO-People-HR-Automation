@@ -1,0 +1,247 @@
+{
+  "name": "Policy Loader",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Reload Now",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        0
+      ],
+      "id": "ef745d0e-9f93-41de-9739-3cf7804f377a"
+    },
+    {
+      "parameters": {
+        "events": [
+          "instanceStarted"
+        ]
+      },
+      "name": "When n8n Starts",
+      "type": "n8n-nodes-base.n8nTrigger",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        208
+      ],
+      "id": "da2807ad-628f-4319-afdf-674167370f8b"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * *"
+            }
+          ]
+        }
+      },
+      "name": "Every Morning 7 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        400
+      ],
+      "id": "066975e3-cbed-4169-83ce-a14a9203f445"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "YOUR_ID",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "name": "List Policy Files",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        224,
+        208
+      ],
+      "id": "e9113fe9-a16d-42d1-aa10-87af65d4f95f"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {}
+        }
+      },
+      "name": "Download Policy",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        432,
+        208
+      ],
+      "id": "38ab44bf-e61b-459d-bcd7-b214e12cc019"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": "hr_policies",
+        "clearStore": true
+      },
+      "name": "Reload Knowledge Base",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1,
+      "position": [
+        672,
+        208
+      ],
+      "id": "f8247c70-a0d6-464b-bb66-a1b534a9203c"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Read Policy Text",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        672,
+        400
+      ],
+      "id": "12ce1bc9-1754-47a2-b035-f1d2ca497844"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "name": "Split Into Chunks",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        672,
+        608
+      ],
+      "id": "fb9688a8-78ff-47ab-8b51-9bb681c0f4d8"
+    },
+    {
+      "parameters": {},
+      "name": "Gemini Embeddings",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        928,
+        400
+      ],
+      "id": "a3ff7185-8717-4c3b-b98d-5b074b897b6b"
+    }
+  ],
+  "connections": {
+    "Reload Now": {
+      "main": [
+        [
+          {
+            "node": "List Policy Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When n8n Starts": {
+      "main": [
+        [
+          {
+            "node": "List Policy Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every Morning 7 AM": {
+      "main": [
+        [
+          {
+            "node": "List Policy Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Policy Files": {
+      "main": [
+        [
+          {
+            "node": "Download Policy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Policy": {
+      "main": [
+        [
+          {
+            "node": "Reload Knowledge Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Policy Text": {
+      "ai_document": [
+        [
+          {
+            "node": "Reload Knowledge Base",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Into Chunks": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Read Policy Text",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Reload Knowledge Base",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "vMva4mtgp8zohJMc",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "nodeGroups": []
+}
